@@ -20,4 +20,4 @@ do
 done
 
 # Install the scripts
-cp -t ~/.local/bin "${scripts[@]}"
+cp "${scripts[@]}" ~/.local/bin/

@@ -23,11 +23,5 @@ fi
 
 echo "Created worktree at $worktree_path" >&2
 
-# Open two Terminal windows in the worktree directory, second one runs claude
-osascript <<EOF
-tell application "Terminal"
-  activate
-  do script "cd '$worktree_path'"
-  do script "cd '$worktree_path' && claude"
-end tell
-EOF
+# Open a Terminal window in the worktree directory
+open -a Terminal "$worktree_path"

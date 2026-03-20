@@ -10,7 +10,7 @@ cd random-mac-tools
 
 # git-split
 
-Creates a git worktree for a branch and opens Terminal windows for it, with one running Claude
+Creates a git worktree for a branch and opens a Terminal window for it
 
 ### Usage
 
@@ -18,7 +18,7 @@ Creates a git worktree for a branch and opens Terminal windows for it, with one 
 git-split <branch>
 ```
 
-If the branch already exists, it will be reused. Otherwise, a new branch is created. Two Terminal windows are opened in the worktree directory — one plain and one running `claude`.
+If the branch already exists, it will be reused. Otherwise, a new branch is created. A Terminal window is opened in the worktree directory.
 
 # git-split-done
 
