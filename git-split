@@ -1,0 +1,33 @@
+#!/bin/bash
+set -e
+
+branch="$1"
+if [ -z "$branch" ]; then
+  echo "Usage: git-split <branch>" >&2
+  exit 1
+fi
+
+# Get repo root and folder name
+repo_root="$(git rev-parse --show-toplevel)"
+repo_name="$(basename "$repo_root")"
+worktree_path="$(dirname "$repo_root")/${repo_name}-${branch}"
+
+# Create worktree, reusing existing branch or creating a new one
+if git show-ref --verify --quiet "refs/heads/$branch"; then
+  echo "Using existing branch '$branch'" >&2
+  git worktree add "$worktree_path" "$branch"
+else
+  echo "Creating new branch '$branch'" >&2
+  git worktree add -b "$branch" "$worktree_path"
+fi
+
+echo "Created worktree at $worktree_path" >&2
+
+# Open two Terminal windows in the worktree directory, second one runs claude
+osascript <<EOF
+tell application "Terminal"
+  activate
+  do script "cd '$worktree_path'"
+  do script "cd '$worktree_path' && claude"
+end tell
+EOF

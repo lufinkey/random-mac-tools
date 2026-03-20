@@ -1,0 +1,34 @@
+#!/bin/bash
+set -e
+
+# Check if we're in a git worktree
+worktree_path="$(git rev-parse --show-toplevel 2>/dev/null)"
+if [ -z "$worktree_path" ]; then
+  echo "Not in a git repository." >&2
+  exit 1
+fi
+
+# git rev-parse --git-common-dir gives the main repo's .git dir
+# git rev-parse --git-dir gives .git or .git/worktrees/<name> for worktrees
+git_dir="$(git rev-parse --git-dir)"
+git_common_dir="$(git rev-parse --git-common-dir)"
+
+# Resolve to absolute paths for comparison
+git_dir="$(cd "$git_dir" && pwd)"
+git_common_dir="$(cd "$git_common_dir" && pwd)"
+
+if [ "$git_dir" = "$git_common_dir" ]; then
+  echo "Not in a worktree (this is the main repository)." >&2
+  exit 1
+fi
+
+branch="$(git rev-parse --abbrev-ref HEAD)"
+
+echo "Removing worktree at $worktree_path (branch: $branch)..."
+
+# Move out of the worktree directory so removal can succeed
+cd /
+
+git -C "$git_common_dir/.." worktree remove "$worktree_path"
+
+echo "Worktree removed."
